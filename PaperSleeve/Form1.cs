@@ -4,7 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
+using System.Data.SQLite;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -16,14 +20,39 @@ namespace PaperSleeve
 {
     public partial class Form1 : Form
     {
+        // Для подключения БД
+        // Адрес БД
+        private String dbFileName;
+        // Конект к БД
+        private SQLiteConnection m_dbConn;
+        // Команды бд
+        private SQLiteCommand m_sqlCmd;
+
+        // Переменные для связи с БД
+        //Мыло
+        string Mail;
+        //Пароль от мыла
+        string password;
+        // Порт 
+        string Smtp1;
+        // номер порта
+        string PortSmtp;
+        // Порт для приёма
+        string Pop;
+        // Номер порта приёма
+        string Portpop;
+
+
+
         //Форма "Сервис"
         Service ServiceF = new Service();
         //Форма "Пользователь"
         UserForm FormU = new UserForm();
+
+
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
@@ -35,8 +64,6 @@ namespace PaperSleeve
             {
                 Application.Exit();
             }
-            
-            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -54,27 +81,80 @@ namespace PaperSleeve
         {
 
             // Проверка есть ли данные в БД
-            // Открытие формы, если нет поля будут пустыми 
-            FormU.Show();
+            if ((Mail != null) && (password != null) && (Smtp1 != null)
+                && (PortSmtp != null) && (Portpop != null))
+            {
+                FormU.LoadData(Mail, password);
+                FormU.Show();
+            }
+            else
+            {
+                // Открытие формы, если нет поля будут пустыми
+                MessageBox.Show(" Данные по пользователю отсутствуют",
+                "Внимание",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+                FormU.Show();
+            }
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             // Проверка есть ли подключение к БД
-           
-            
+            Debug.Print(Application.StartupPath);
+            dbFileName = Application.StartupPath+"MailData.db";
+            m_dbConn = new SQLiteConnection();
+            m_sqlCmd = new SQLiteCommand();
+            try
+            {
+                m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
+                m_dbConn.Open();
+                m_sqlCmd.Connection = m_dbConn;
+                // выполняем команду считать все поля из таблицы  MailInfo
+                SQLiteCommand command = new SQLiteCommand("SELECT * FROM 'MailInfo';", m_dbConn);
+                SQLiteDataReader reader = command.ExecuteReader();
 
+                // если есть данные 
+                // Организовать проверку на наличие данных и если их нет
+                // предложить их ввести
+
+                // в цикле заносим в глобальные переменные данные из таблицы
+                foreach (DbDataRecord record in reader)
+                {
+                    Mail = record["Email"].ToString();
+                    password = record["Password"].ToString();
+                    Smtp1 = record["Smtp"].ToString();
+                    PortSmtp = record["portSmtp"].ToString();
+                    Pop = record["Pop"].ToString();
+                    Portpop = record["portPop"].ToString();
+                }
+
+                
+                    this.Text = "Connected";
+
+
+            }
+            catch (SQLiteException ex)
+            {
+                this.Text = "Disconnected";
+                MessageBox.Show("Error: " + ex.Message);
+            }
             // 
         }
         private  void button1_Click(object sender, EventArgs e)
         {
+            //Костыль)))
+            int ps = Convert.ToInt32(PortSmtp);
+
             try
             {
-               using (SmtpClient Smtp = new SmtpClient("smtp.mail.ru", 25))
+               using (SmtpClient Smtp = new SmtpClient(Smtp1,ps))
                { 
-                Smtp.Credentials = new NetworkCredential("mail", "password");
+                Smtp.Credentials = new NetworkCredential(Mail, password);
                 MailMessage Message = new MailMessage();
-                Message.From = new MailAddress("mail");
+                Message.From = new MailAddress(Mail);
                 Message.To.Add(new MailAddress(textBox3.Text));
                 Smtp.EnableSsl = true;
                 Message.Subject = textBox2.Text;
@@ -91,9 +171,11 @@ namespace PaperSleeve
         // приём сообщений, реализовано через OpenPop
         private void button3_Click(object sender, EventArgs e)
         {
+            int pp = Convert.ToInt32(Portpop);
+
             var client = new OpenPop.Pop3.Pop3Client();
-            client.Connect("pop.mail.ru", 995, true);
-            client.Authenticate("mail", "password", OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
+            client.Connect(Pop, pp, true);
+            client.Authenticate(Mail, password, OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
             int countMessage = client.GetMessageCount();
             var count = client.GetMessageCount();
 
