@@ -19,31 +19,12 @@ namespace PaperSleeve
             InitializeComponent();
         }
 
-        //// Глобальные переменные из Метода Load Form1
+        // Глобальные переменные из Метода Load Form1
         string Mail;
         string password;
 
-
+        // Объект для связи с БД
         DataConection r = new DataConection();
-
-        // Переменные для связи с БД
-        // Порт 
-        public string Smtp1 { set; get; }
-        // номер порта
-        public string PortSmtp { set; get; }
-        // Порт для приёма
-        public string Pop { set; get; }
-        // Номер порта приёма
-        public string Portpop { set; get; }
-
-        ////Адрес БД
-        //string dbFileName;
-        //// Конект к БД
-        //private SQLiteConnection Connect;
-        //// Команды бд
-        //private SQLiteCommand SqlCmd;
-
-
 
         //Метод нужен для обрашения к Form1 и забору данных
         public void LoadData(string Mail_, string password_)
@@ -51,13 +32,6 @@ namespace PaperSleeve
             Mail = Mail_;
             password = password_;
         }
-
-        //// Метод получает информацию о соединение из исключения, если в БД нету информации о пользователи
-        //public void LoadData(string dbFN, SQLiteConnection m_dbConn, SQLiteCommand m_sqlCmd)
-        //{
-        //    
-        //}
-
 
         private void UserForm_Load(object sender, EventArgs e)
         {
@@ -71,8 +45,41 @@ namespace PaperSleeve
             if ((textBox1.Text!=Mail) || (textBox2.Text != password)&&
                 ((textBox1.Text !="")&&(textBox2.Text != "")))
             {
+                // Находим в почтовом адресе символ @ и от него
+                // вырезаем правую часть оставляя только
+                // mail.ru,yandex.ru,gmail.com, потом через switch присваиваем свойствам
+                // определенные номера портов
+                Mail = textBox1.Text;
+                int istart = Mail.IndexOf("@", StringComparison.InvariantCultureIgnoreCase);
+                if (istart < 0)
+                    MessageBox.Show("Вы ввели не правильный адрес");
+
+                string ShortMail = Mail.Remove(0, istart + 1);
+
+                switch (ShortMail)
+                {
+                    case "mail.ru":
+                        r.Portpop = "995";
+                        r.PortSmtp = "25";
+                        r.Pop = "pop.mail.ru";
+                        r.Smtp1 = "smtp.mail.ru";
+                        break;
+                    case "yandex.ru":
+                        r.Portpop = "995";
+                        r.PortSmtp = "465";
+                        r.Pop = "pop.yandex.ru";
+                        r.Smtp1 = "smtp.yandex.ru";
+                        break;
+                    case "gmail.com":
+                        r.Portpop = "993";
+                        r.PortSmtp = "465";
+                        r.Pop = "pop.gmail.com";
+                        r.Smtp1 = "smtp.gmail.com";
+                        break;
+                }
                 // Если строки изменили, сохранить в БД
-                r.InsertBd(textBox1.Text,textBox2.Text);
+                r.InsertBd(textBox1.Text, textBox2.Text);
+                // Добавить проверку на корпоративную почту
                 //Подключить БД
                 r.ConectionBD();
 
@@ -81,16 +88,9 @@ namespace PaperSleeve
             
         }
 
-        
-
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //if ((textBox1.Text != CMail) || (textBox1.Text != password))
-            //{
-            //    button1.Visible = true;
-            //}
+           
         }
-
-       
     }
 }

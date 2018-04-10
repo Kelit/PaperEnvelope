@@ -25,8 +25,10 @@ namespace PaperSleeve
         //Форма "Сервис"
         Service ServiceF = new Service();
 
+        // Объект для связи с БД
         DataConection Con = new DataConection();
 
+        // Форма пользоветеля
         UserForm FormU = new UserForm();
 
         public Form1()
@@ -75,7 +77,6 @@ namespace PaperSleeve
                 FormU.Show();
             }
 
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -86,8 +87,10 @@ namespace PaperSleeve
 
         private  void button1_Click(object sender, EventArgs e)
         {
+            // временное решение
             Con.ConectionBD();
-            //Костыль)))
+            // Свойство PortSmtp хранит тип string для нормальной работы
+            // необходим int, временной решение
             int ps = Convert.ToInt32(Con.PortSmtp);
 
             try
