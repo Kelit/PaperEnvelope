@@ -22,15 +22,14 @@ namespace PaperSleeve
     public partial class Form1 : Form
     {
        
-        //Форма "Сервис"
-        Service ServiceF = new Service();
+        
+       
+
 
         // Объект для связи с БД
         DataConection Con = new DataConection();
 
-        // Форма пользоветеля
-        UserForm FormU = new UserForm();
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -60,6 +59,8 @@ namespace PaperSleeve
 
         private void пользовательToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Форма пользоветеля
+            UserForm FormU = new UserForm();
             // Проверка есть ли данные в БД
             if ((Con.Mail != null) && (Con.password != null) && (Con.Smtp1 != null)
                 && (Con.PortSmtp != null) && (Con.Portpop != null))
@@ -135,8 +136,10 @@ namespace PaperSleeve
         {
             //Опять проверка из БД ?
             // Открытие формы, если нет поля будут пустыми 
-            
+            //Форма "Сервис"
+            Service ServiceF = new Service();
             ServiceF.Show();
+           
 
         }
 

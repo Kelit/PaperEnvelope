@@ -77,20 +77,29 @@ namespace PaperSleeve
                         r.Smtp1 = "smtp.gmail.com";
                         break;
                 }
+                // Добавить проверку на корпоративную почту
+                // Если нету подходящей почты из  switch (ShortMail)
+
                 // Если строки изменили, сохранить в БД
                 r.InsertBd(textBox1.Text, textBox2.Text);
-                // Добавить проверку на корпоративную почту
+                
                 //Подключить БД
                 r.ConectionBD();
-
-                //дополнить закрытием формы
+                //дополнить закрытием формы, пока так 
+                //поиск нормальной реализации
+                this.Close();
             }
-            
+
+            //дополнить закрытием формы, пока так 
+            //поиск нормальной реализации
+            this.Close();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
            
         }
+
+        
     }
 }

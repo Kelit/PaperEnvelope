@@ -16,5 +16,10 @@ namespace PaperSleeve
         {
             InitializeComponent();
         }
+
+        private void Service_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
