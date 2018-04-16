@@ -21,15 +21,9 @@ namespace PaperSleeve
 {
     public partial class Form1 : Form
     {
-       
-        
-       
-
-
         // Объект для связи с БД
         DataConection Con = new DataConection();
 
-        
         public Form1()
         {
             InitializeComponent();
@@ -65,7 +59,7 @@ namespace PaperSleeve
             if ((Con.Mail != null) && (Con.password != null) && (Con.Smtp1 != null)
                 && (Con.PortSmtp != null) && (Con.Portpop != null))
             {
-                FormU.LoadData(Con.Mail, Con.password);
+                FormU.LoadData(Con);
                 FormU.Show();
             }
             else
@@ -75,6 +69,7 @@ namespace PaperSleeve
                 "Внимание",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
+                FormU.LoadData(Con);
                 FormU.Show();
             }
 
@@ -83,13 +78,29 @@ namespace PaperSleeve
         private void Form1_Load(object sender, EventArgs e)
         {
             Con.ConectionBD();
+            // Если в БД нет записей вывести сообщения об отсутствие данных
+            // Вывести форму для ввода данных о пользователях
+            if ((Con.Mail == null) && (Con.password == null) && (Con.Smtp1 == null)
+               && (Con.PortSmtp == null) && (Con.Portpop == null))
+            {
+                // Форма "Пользователь"
+                UserForm FormU = new UserForm();
+                Debug.Print("Disconnected");
+                MessageBox.Show(" Данные по пользователю отсутствуют",
+                "Внимание",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+                FormU.LoadData(Con);
+                FormU.ShowDialog();
+            }
+            
         }
 
 
         private  void button1_Click(object sender, EventArgs e)
         {
             // временное решение
-            Con.ConectionBD();
+           // Con.ConectionBD();
             // Свойство PortSmtp хранит тип string для нормальной работы
             // необходим int, временной решение
             int ps = Convert.ToInt32(Con.PortSmtp);
@@ -106,7 +117,11 @@ namespace PaperSleeve
                 Message.Subject = textBox2.Text;
                 Message.Body = textBox1.Text;
                 Smtp.Send(Message);
-               }
+
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox3.Clear();
+                }
             }
             catch(Exception exx)
             {
@@ -139,7 +154,6 @@ namespace PaperSleeve
             //Форма "Сервис"
             Service ServiceF = new Service();
             ServiceF.Show();
-           
 
         }
 

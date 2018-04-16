@@ -68,26 +68,14 @@ namespace EnvelopePaper.Class
             {
                MessageBox.Show("Error: " + ex.Message);
             }
-            // Если в БД нет записей вывести сообщения об отсутствие данных
-            // Вывести форму для ввода данных о пользователях
-            if ((Mail == null) && (password == null) && (Smtp1 == null)
-               && (PortSmtp == null) && (Portpop == null))
-            {
-                // Форма "Пользователь"
-                UserForm FormU = new UserForm();
-                Debug.Print("Disconnected");
-                MessageBox.Show(" Данные по пользователю отсутствуют",
-                "Внимание",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-                FormU.ShowDialog();
-            }
+            
         }
 
         // Вставка в БД
-        public void InsertBd(string Mail,string Password)
+        public void InsertBd(object con)
         {
             //Открытие БД на добавление пользователя
+            DataConection r = (DataConection)con;
             dbFileName = Application.StartupPath + @"\MailData.db";
             m_dbConn = new SQLiteConnection();
             m_sqlCmd = new SQLiteCommand();
@@ -96,8 +84,24 @@ namespace EnvelopePaper.Class
             m_sqlCmd.Connection = m_dbConn;
             // выполняем команду закинуть информацию в поля таблицы  MailInfo
             SQLiteCommand command = new SQLiteCommand
-                ("INSERT INTO 'MailInfo' ('Email', 'Password', 'Smtp', 'portSmtp', 'Pop', 'portPop') VALUES ('"+Mail+"','"+Password+"','"+ Smtp1 + "'," + PortSmtp + " , '"+Pop+"','"+Portpop+"');",
+                ("INSERT INTO 'MailInfo' ('Email', 'Password', 'Smtp', 'portSmtp', 'Pop', 'portPop') VALUES ('"+r.Mail+"','"+r.password+"','"+ r.Smtp1 + "'," + r.PortSmtp + " , '"+r.Pop+"','"+r.Portpop+"');",
                 m_dbConn);
+            command.ExecuteNonQuery();
+            m_dbConn.Close();
+        }
+        // Метод удаления поля из бд
+        public void Delet()
+        {
+            //Открытие БД на удаление
+            dbFileName = Application.StartupPath + @"\MailData.db";
+            m_dbConn = new SQLiteConnection();
+            m_sqlCmd = new SQLiteCommand();
+            m_dbConn = new SQLiteConnection("Data Source=" + dbFileName + ";Version=3;");
+            m_dbConn.Open();
+            m_sqlCmd.Connection = m_dbConn;
+            // выполняем команду удалить пользователя из  MailInfo
+            SQLiteCommand command = new SQLiteCommand
+                ("DELETE FROM MailInfo", m_dbConn);
             command.ExecuteNonQuery();
             m_dbConn.Close();
         }
