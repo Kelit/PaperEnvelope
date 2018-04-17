@@ -89,6 +89,7 @@ namespace EnvelopePaper.Class
             command.ExecuteNonQuery();
             m_dbConn.Close();
         }
+
         // Метод удаления поля из бд
         public void Delet()
         {

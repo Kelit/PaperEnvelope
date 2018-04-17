@@ -21,13 +21,10 @@ namespace PaperSleeve
         // Объект для связи с БД
         DataConection r;
 
-
         public UserForm()
         {
             InitializeComponent();
         }
-
-       
 
         //Метод нужен для обрашения к Form1 и забору данных
         public void LoadData(object con)
@@ -36,7 +33,7 @@ namespace PaperSleeve
             Mail = r.Mail;
             password = r.password;
             listBox1.Items.Add("MAIL = " + r.Mail);
-            listBox1.Items.Add("PASWWORD = " + r.password);
+            listBox1.Items.Add("PASWWORD = " +r.password);
             listBox1.Items.Add("POP = " + r.Pop);
             listBox1.Items.Add("PORT POP = " + r.Portpop);
             listBox1.Items.Add("SMTP = " + r.Smtp1);
@@ -48,10 +45,6 @@ namespace PaperSleeve
             textBox1.Text =Mail;
             textBox2.Text =password;
             //pictureBox1.ImageLocation =
-            
-            //button1.Visible = false;
-
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -71,7 +64,6 @@ namespace PaperSleeve
                 if (istart < 0)
                     MessageBox.Show("Вы ввели не правильный адрес");
                
-
                 string ShortMail = Mail.Remove(0, istart + 1);
 
                 switch (ShortMail)
@@ -94,31 +86,33 @@ namespace PaperSleeve
                         r.Pop = "pop.gmail.com";
                         r.Smtp1 = "smtp.gmail.com";
                         break;
+                    default:
+                        r.Smtp1 = textBox3.Text;
+                        r.Pop = textBox4.Text;
+                        r.PortSmtp = textBox5.Text;
+                        r.Portpop = textBox6.Text;
+                        break;
                 }
                 
                 r.Mail = Mail;
                 r.password = password;
-                // Добавить проверку на корпоративную почту
-                // Если нету подходящей почты из  switch (ShortMail)
-
-
                 // Если строки изменили, сохранить в БД
                 r.InsertBd(r);
-                
                 //Подключить БД
                 r.ConectionBD();
                 //дополнить закрытием формы, пока так 
                 //поиск нормальной реализации
-                this.Close();
+                if (MessageBox.Show("Данные добавлены",
+               "ВНИМАНИЕ",
+               MessageBoxButtons.OK,
+               MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    this.Close();
+                }
             }
-
             //дополнить закрытием формы, пока так 
             //поиск нормальной реализации
             this.Close();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
            
         }
 
@@ -139,7 +133,6 @@ namespace PaperSleeve
             {
                 this.Close();
             }
-            button1.Visible = true;
         }
     }
 }

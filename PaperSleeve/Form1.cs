@@ -100,7 +100,7 @@ namespace PaperSleeve
         private  void button1_Click(object sender, EventArgs e)
         {
             // временное решение
-           // Con.ConectionBD();
+            // Con.ConectionBD();
             // Свойство PortSmtp хранит тип string для нормальной работы
             // необходим int, временной решение
             int ps = Convert.ToInt32(Con.PortSmtp);
