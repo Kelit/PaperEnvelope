@@ -29,8 +29,6 @@ namespace PaperSleeve
 
     public partial class Form1 : Form, IMainForm
     {
-        public string Fontant { get; set; }
-
         // Объект для связи с учетками БД
         DataConection Con = new DataConection();
         // Объект для связи с шрифтом БД
@@ -39,32 +37,42 @@ namespace PaperSleeve
         public Form1()
         {
             InitializeComponent();
-            textBox1.TextAlignChanged += TextBox1_TextAlignChanged;
+            textBox1.TextChanged += TextBox1_TextChanged;
             numericUpDown1.ValueChanged += NumericUpDown1_ValueChanged;
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
         }
 
-        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-           textBox1.Font = new Font(Fontant, (float)numericUpDown1.Value);
-        }
 
-        // Для обработки текста
-        private void TextBox1_TextAlignChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             if (ContentChanged != null) ContentChanged(this, EventArgs.Empty);
         }
+
+        // Для шрифта
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBox1.Font = new Font((string)comboBox1.SelectedItem, (float)numericUpDown1.Value);
+        }
+        // Для размера шрифта
+        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+           textBox1.Font = new Font((string)comboBox1.SelectedItem, (float)numericUpDown1.Value);
+        }
+
+        // Для обработки текста
+        
         public void SetSembolCount(int count)
         {
             lbSymn.Text = count.ToString();
         }
-        public event EventHandler ContentChanged;
 
-        
         public string Content
         {
             get { return textBox1.Text; }
             set { textBox1.Text = value; }
         }
+
+        public event EventHandler ContentChanged;
 
         //----------------------------------
 
@@ -138,7 +146,6 @@ namespace PaperSleeve
 
             // Подключаем таблицу со шрифтами
             SF.ServiceConnector();
-            
         }
 
 
@@ -195,32 +202,12 @@ namespace PaperSleeve
            // textBox1.Text = message.Headers.ContentType;
         }
 
-        private void сервисToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Открытие формы, если нет поля будут пустыми 
-            //Форма "Сервис"
-            Service ServiceF = new Service();
-            ServiceF.Show();
-
-        }
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.ExitThread();
             Application.Exit();
             
         }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-
-            Fontant = (string)comboBox1.SelectedItem;
-           
-
-
-        }
-
 
         //public static List<Message> FetchAllMessages(string hostname, int port, bool useSsl, string username, string password)
         //{
