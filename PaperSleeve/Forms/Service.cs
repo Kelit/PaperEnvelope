@@ -19,7 +19,9 @@ namespace PaperSleeve
 
         private void Service_Load(object sender, EventArgs e)
         {
-
+            comboBox1.Items.Add("Arial");
+            comboBox1.Items.Add("Courier");
+            comboBox1.Items.Add("Times New Roman"); 
         }
     }
 }

@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Windows.Forms;
-using PaperSleeve;
-using System.Diagnostics;
+
 
 namespace EnvelopePaper.Class
 {
-   // Данный модуль необходим для подключения к БД, обновлению и вставки данных
+    // Данный модуль необходим для подключения к БД, обновлению
+    // удалению и вставки данных о пользователе
     class DataConection
     {
         // Для подключения БД
@@ -61,7 +57,6 @@ namespace EnvelopePaper.Class
                     Pop = record["Pop"].ToString();
                     Portpop = record["portPop"].ToString();
                 }
-                Debug.Print("Connected");
                 m_dbConn.Close();
             }
             catch (SQLiteException ex)

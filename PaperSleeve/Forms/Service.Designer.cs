@@ -52,13 +52,13 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.Size = new System.Drawing.Size(99, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Имя шрифта";
+            this.label2.Text = "Название шрифта";
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(98, 55);
+            this.numericUpDown1.Location = new System.Drawing.Point(113, 55);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(97, 20);
             this.numericUpDown1.TabIndex = 2;
@@ -66,7 +66,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(98, 17);
+            this.comboBox1.Location = new System.Drawing.Point(113, 17);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(195, 21);
             this.comboBox1.TabIndex = 3;
@@ -82,7 +82,7 @@
             // 
             // RefresButton
             // 
-            this.RefresButton.Location = new System.Drawing.Point(218, 108);
+            this.RefresButton.Location = new System.Drawing.Point(233, 108);
             this.RefresButton.Name = "RefresButton";
             this.RefresButton.Size = new System.Drawing.Size(75, 23);
             this.RefresButton.TabIndex = 5;

@@ -19,15 +19,54 @@ using System.Windows.Forms;
 
 namespace PaperSleeve
 {
-    public partial class Form1 : Form
+    public interface IMainForm
     {
-        // Объект для связи с БД
+        string Content { get; set; }
+        void SetSembolCount(int count);
+        event EventHandler ContentChanged;
+    }
+
+
+    public partial class Form1 : Form, IMainForm
+    {
+        public string Fontant { get; set; }
+
+        // Объект для связи с учетками БД
         DataConection Con = new DataConection();
+        // Объект для связи с шрифтом БД
+        ServiceConnecting SF = new ServiceConnecting();
 
         public Form1()
         {
             InitializeComponent();
+            textBox1.TextAlignChanged += TextBox1_TextAlignChanged;
+            numericUpDown1.ValueChanged += NumericUpDown1_ValueChanged;
         }
+
+        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+           textBox1.Font = new Font(Fontant, (float)numericUpDown1.Value);
+        }
+
+        // Для обработки текста
+        private void TextBox1_TextAlignChanged(object sender, EventArgs e)
+        {
+            if (ContentChanged != null) ContentChanged(this, EventArgs.Empty);
+        }
+        public void SetSembolCount(int count)
+        {
+            lbSymn.Text = count.ToString();
+        }
+        public event EventHandler ContentChanged;
+
+        
+        public string Content
+        {
+            get { return textBox1.Text; }
+            set { textBox1.Text = value; }
+        }
+
+        //----------------------------------
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -78,6 +117,10 @@ namespace PaperSleeve
         private void Form1_Load(object sender, EventArgs e)
         {
             Con.ConectionBD();
+            comboBox1.Items.Add("Calibri");
+            comboBox1.Items.Add("Times New Roman");
+            comboBox1.Items.Add("Chaparral Pro Light");
+            
             // Если в БД нет записей вывести сообщения об отсутствие данных
             // Вывести форму для ввода данных о пользователях
             if ((Con.Mail == null) && (Con.password == null) && (Con.Smtp1 == null)
@@ -85,7 +128,6 @@ namespace PaperSleeve
             {
                 // Форма "Пользователь"
                 UserForm FormU = new UserForm();
-                Debug.Print("Disconnected");
                 MessageBox.Show(" Данные по пользователю отсутствуют",
                 "Внимание",
                 MessageBoxButtons.OK,
@@ -93,14 +135,15 @@ namespace PaperSleeve
                 FormU.LoadData(Con);
                 FormU.ShowDialog();
             }
+
+            // Подключаем таблицу со шрифтами
+            SF.ServiceConnector();
             
         }
 
 
         private  void button1_Click(object sender, EventArgs e)
         {
-            // временное решение
-            // Con.ConectionBD();
             // Свойство PortSmtp хранит тип string для нормальной работы
             // необходим int, временной решение
             int ps = Convert.ToInt32(Con.PortSmtp);
@@ -118,6 +161,11 @@ namespace PaperSleeve
                 Message.Body = textBox1.Text;
                 Smtp.Send(Message);
 
+                MessageBox.Show("Сообщение успешно отправлено",
+                                "!",
+                                 MessageBoxButtons.OK,
+                                 MessageBoxIcon.Information);
+
                 textBox1.Clear();
                 textBox2.Clear();
                 textBox3.Clear();
@@ -125,7 +173,7 @@ namespace PaperSleeve
             }
             catch(Exception exx)
             {
-                MessageBox.Show(exx.Message);
+                MessageBox.Show(exx.Message+", возможно вы указали неверны адрес почты");
             }
         }
 
@@ -149,7 +197,6 @@ namespace PaperSleeve
 
         private void сервисToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Опять проверка из БД ?
             // Открытие формы, если нет поля будут пустыми 
             //Форма "Сервис"
             Service ServiceF = new Service();
@@ -163,6 +210,18 @@ namespace PaperSleeve
             Application.Exit();
             
         }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+
+            Fontant = (string)comboBox1.SelectedItem;
+           
+
+
+        }
+
+
         //public static List<Message> FetchAllMessages(string hostname, int port, bool useSsl, string username, string password)
         //{
         //    // Используем using чтобы соединение автоматически закрывалось

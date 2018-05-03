@@ -57,6 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\DataConection.cs" />
+    <Compile Include="Class\FileManager.cs" />
+    <Compile Include="Class\MainPresenter.cs" />
+    <Compile Include="Class\ServiceConnecting.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
