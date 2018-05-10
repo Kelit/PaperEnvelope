@@ -29,6 +29,7 @@ namespace PaperSleeve
 
     public partial class Form1 : Form, IMainForm
     {
+
         // Объект для связи с учетками БД
         DataConection Con = new DataConection();
         // Объект для связи с шрифтом БД
@@ -154,7 +155,6 @@ namespace PaperSleeve
             // Свойство PortSmtp хранит тип string для нормальной работы
             // необходим int, временной решение
             int ps = Convert.ToInt32(Con.PortSmtp);
-
             try
             {
                using (SmtpClient Smtp = new SmtpClient(Con.Smtp1,ps))
@@ -208,6 +208,7 @@ namespace PaperSleeve
             Application.Exit();
             
         }
+
 
         //public static List<Message> FetchAllMessages(string hostname, int port, bool useSsl, string username, string password)
         //{

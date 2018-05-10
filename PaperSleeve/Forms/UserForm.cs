@@ -25,7 +25,7 @@ namespace PaperSleeve
             Mail = r.Mail;
             password = r.password;
             listBox1.Items.Add("MAIL = " + r.Mail);
-            listBox1.Items.Add("PASWWORD = " +r.password);
+            //listBox1.Items.Add("PASWWORD = " +r.password);
             listBox1.Items.Add("POP = " + r.Pop);
             listBox1.Items.Add("PORT POP = " + r.Portpop);
             listBox1.Items.Add("SMTP = " + r.Smtp1);

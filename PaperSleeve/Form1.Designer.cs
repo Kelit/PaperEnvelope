@@ -65,7 +65,7 @@
             this.textBox1.Location = new System.Drawing.Point(8, 90);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(621, 348);
+            this.textBox1.Size = new System.Drawing.Size(717, 348);
             this.textBox1.TabIndex = 0;
             // 
             // menuStrip1
@@ -76,7 +76,7 @@
             this.информацияToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(896, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(992, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -127,7 +127,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(513, 444);
+            this.button1.Location = new System.Drawing.Point(609, 444);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(116, 45);
             this.button1.TabIndex = 2;
@@ -138,7 +138,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(397, 460);
+            this.button2.Location = new System.Drawing.Point(493, 460);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(110, 29);
             this.button2.TabIndex = 3;
@@ -153,7 +153,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Location = new System.Drawing.Point(72, 64);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(557, 20);
+            this.textBox2.Size = new System.Drawing.Size(653, 20);
             this.textBox2.TabIndex = 4;
             // 
             // label1
@@ -181,7 +181,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox3.Location = new System.Drawing.Point(72, 35);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(557, 20);
+            this.textBox3.Size = new System.Drawing.Size(653, 20);
             this.textBox3.TabIndex = 7;
             // 
             // listBox1
@@ -189,14 +189,14 @@
             this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(642, 46);
+            this.listBox1.Location = new System.Drawing.Point(738, 46);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(245, 446);
             this.listBox1.TabIndex = 8;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(300, 448);
+            this.button3.Location = new System.Drawing.Point(396, 448);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(91, 41);
             this.button3.TabIndex = 9;
@@ -219,7 +219,7 @@
             this.lbSymn});
             this.statusStrip1.Location = new System.Drawing.Point(0, 492);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(896, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(992, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -268,7 +268,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 514);
+            this.ClientSize = new System.Drawing.Size(992, 514);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBox1);
