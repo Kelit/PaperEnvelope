@@ -34,6 +34,9 @@ namespace PaperSleeve
         DataConection Con = new DataConection();
         // Объект для связи с шрифтом БД
         ServiceConnecting SF = new ServiceConnecting();
+        // Для вложений
+        Attachment attData;
+
 
         public Form1()
         {
@@ -41,7 +44,26 @@ namespace PaperSleeve
             textBox1.TextChanged += TextBox1_TextChanged;
             numericUpDown1.ValueChanged += NumericUpDown1_ValueChanged;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
+            //treeView1.
         }
+
+        //private void TreeView1_AfterCheck(object sender, TreeViewEventArgs e)
+        //{
+        //    // приём сообщений, реализовано через OpenPop
+        //    int pp = Convert.ToInt32(Con.Portpop);
+
+        //    var client = new OpenPop.Pop3.Pop3Client();
+        //    client.Connect(Con.Pop, pp, true);
+        //    client.Authenticate(Con.Mail, Con.password, OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
+        //    int countMessage = client.GetMessageCount();
+        //    var count = client.GetMessageCount();
+
+        //    var message = client.GetMessage(count);
+        //    treeView1.Nodes.Add(message.Headers.Subject);// заголовок
+        //    //listBox1.Items.Add(message.Headers.From);//от кого
+        //    //listBox1.Items.Add(message.Headers.DateSent);//Дата/Время
+        //                                                 // textBox1.Text = message.Headers.ContentType;
+        //}
 
 
         private void TextBox1_TextChanged(object sender, EventArgs e)
@@ -129,6 +151,7 @@ namespace PaperSleeve
             comboBox1.Items.Add("Calibri");
             comboBox1.Items.Add("Times New Roman");
             comboBox1.Items.Add("Chaparral Pro Light");
+
             
             // Если в БД нет записей вывести сообщения об отсутствие данных
             // Вывести форму для ввода данных о пользователях
@@ -166,6 +189,8 @@ namespace PaperSleeve
                 Smtp.EnableSsl = true;
                 Message.Subject = textBox2.Text;
                 Message.Body = textBox1.Text;
+                //прикрепляем вложение
+                if (attData != null) Message.Attachments.Add(attData);
                 Smtp.Send(Message);
 
                 MessageBox.Show("Сообщение успешно отправлено",
@@ -176,6 +201,7 @@ namespace PaperSleeve
                 textBox1.Clear();
                 textBox2.Clear();
                 textBox3.Clear();
+                attData = null; label5.Text = "";
                 }
             }
             catch(Exception exx)
@@ -185,9 +211,7 @@ namespace PaperSleeve
         }
 
         // приём сообщений, реализовано через OpenPop
-        private void button3_Click(object sender, EventArgs e)
-        {
-            int pp = Convert.ToInt32(Con.Portpop);
+        /* int pp = Convert.ToInt32(Con.Portpop);
 
             var client = new OpenPop.Pop3.Pop3Client();
             client.Connect(Con.Pop, pp, true);
@@ -199,7 +223,10 @@ namespace PaperSleeve
             listBox1.Items.Add(message.Headers.Subject);// заголовок
             listBox1.Items.Add(message.Headers.From);//от кого
             listBox1.Items.Add(message.Headers.DateSent);//Дата/Время
-           // textBox1.Text = message.Headers.ContentType;
+           // textBox1.Text = message.Headers.ContentType;*/
+        private void button3_Click(object sender, EventArgs e)
+        {
+          
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -207,6 +234,25 @@ namespace PaperSleeve
             Application.ExitThread();
             Application.Exit();
             
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox1.Focus();
+            attData = null; label5.Text = "";
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+
+            dlg.ShowDialog();
+
+            attData = new Attachment(dlg.FileName);
+            label5.Text = attData.Name;
         }
 
 
