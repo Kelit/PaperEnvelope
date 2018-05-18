@@ -1,4 +1,5 @@
 ﻿using EnvelopePaper.Class;
+using EnvelopePaper.Forms;
 using OpenPop.Pop3;
 using PaperSleeve;
 using System;
@@ -32,8 +33,7 @@ namespace PaperSleeve
 
         // Объект для связи с учетками БД
         DataConection Con = new DataConection();
-        // Объект для связи с шрифтом БД
-        ServiceConnecting SF = new ServiceConnecting();
+
         // Для вложений
         Attachment attData;
 
@@ -168,8 +168,7 @@ namespace PaperSleeve
                 FormU.ShowDialog();
             }
 
-            // Подключаем таблицу со шрифтами
-            SF.ServiceConnector();
+
         }
 
 
@@ -253,6 +252,12 @@ namespace PaperSleeve
 
             attData = new Attachment(dlg.FileName);
             label5.Text = attData.Name;
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm About = new AboutForm();
+            About.ShowDialog();
         }
 
 
