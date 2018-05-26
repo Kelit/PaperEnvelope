@@ -1,6 +1,10 @@
 ﻿using EnvelopePaper.Class;
 using EnvelopePaper.Forms;
+using OpenPop.Common.Logging;
 using OpenPop.Pop3;
+using OpenPop.Pop3.Exceptions;
+using OpenPop.Mime;
+using OpenPop.Mime.Header;
 using PaperSleeve;
 using System;
 using System.Collections.Generic;
@@ -17,6 +21,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Message = OpenPop.Mime.Message;
 
 namespace PaperSleeve
 {
@@ -30,6 +35,99 @@ namespace PaperSleeve
 
     public partial class Form1 : Form, IMainForm
     {
+        private readonly Pop3Client pop3Client;
+        private readonly Dictionary<int, Message> messages = new Dictionary<int, Message>();
+        //private SaveFileDialog saveFile;
+
+        private void ReceiveMails()
+        {
+            // Disable buttons while working
+            //connectAndRetrieveButton.Enabled = false;
+            //uidlButton.Enabled = false;
+            //progressBar.Value = 0;
+
+            try
+            {
+                if (pop3Client.Connected)
+                    pop3Client.Disconnect();
+                pop3Client.Connect(Con.Pop, int.Parse(Con.Portpop), true);
+                pop3Client.Authenticate(Con.Mail, Con.password);
+                int count = pop3Client.GetMessageCount();
+                //totalMessagesTextBox.Text = count.ToString();
+                //messageTextBox.Text = "";
+                messages.Clear();
+                treeView1.Nodes.Clear();
+               // listAttachments.Nodes.Clear();
+
+                int success = 0;
+                int fail = 0;
+                for (int i = count; i >= 1; i -= 1)
+                {
+                    // Check if the form is closed while we are working. If so, abort
+                    if (IsDisposed)
+                        return;
+
+                    // Refresh the form while fetching emails
+                    // This will fix the "Application is not responding" problem
+                    Application.DoEvents();
+
+                    try
+                    {
+                        Message message = pop3Client.GetMessage(i);
+
+                        // Add the message to the dictionary from the messageNumber to the Message
+                        messages.Add(i, message);
+
+                        // Create a TreeNode tree that mimics the Message hierarchy
+                        TreeNode node = new OpenPop.TestApplication.TreeNodeBuilder().VisitMessage(message);
+
+                        // Set the Tag property to the messageNumber
+                        // We can use this to find the Message again later
+                        node.Tag = i;
+
+                        // Show the built node in our list of messages
+                        treeView1.Nodes.Add(node);
+
+                        success++;
+                    }
+                    catch (Exception e)
+                    {
+                        DefaultLogger.Log.LogError(
+                            "TestForm: Message fetching failed: " + e.Message + "\r\n" +
+                            "Stack trace:\r\n" +
+                            e.StackTrace);
+                        fail++;
+                    }
+
+                    //progressBar.Value = (int)(((double)(count - i) / count) * 100);
+                }
+
+                MessageBox.Show(this, "Почта получена!\nУспешно: " + success + "\nПровалено: " + fail, "Загрузка Сообщений завершена");
+            }
+            catch (InvalidLoginException)
+            {
+                MessageBox.Show(this, "The server did not accept the user credentials!", "POP3 Server Authentication");
+            }
+            catch (PopServerNotFoundException)
+            {
+                MessageBox.Show(this, "The server could not be found", "POP3 Retrieval");
+            }
+            catch (PopServerLockedException)
+            {
+                MessageBox.Show(this, "The mailbox is locked. It might be in use or under maintenance. Are you connected elsewhere?", "POP3 Account Locked");
+            }
+            catch (LoginDelayException)
+            {
+                MessageBox.Show(this, "Login not allowed. Server enforces delay between logins. Have you connected recently?", "POP3 Account Login Delay");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(this, "Error occurred retrieving mail. " + e.Message, "POP3 Retrieval");
+            }
+        }
+
+
+
 
         // Объект для связи с учетками БД
         DataConection Con = new DataConection();
@@ -40,31 +138,13 @@ namespace PaperSleeve
 
         public Form1()
         {
+            pop3Client = new Pop3Client();
             InitializeComponent();
             textBox1.TextChanged += TextBox1_TextChanged;
             numericUpDown1.ValueChanged += NumericUpDown1_ValueChanged;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
-            //treeView1.
+
         }
-
-        //private void TreeView1_AfterCheck(object sender, TreeViewEventArgs e)
-        //{
-        //    // приём сообщений, реализовано через OpenPop
-        //    int pp = Convert.ToInt32(Con.Portpop);
-
-        //    var client = new OpenPop.Pop3.Pop3Client();
-        //    client.Connect(Con.Pop, pp, true);
-        //    client.Authenticate(Con.Mail, Con.password, OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
-        //    int countMessage = client.GetMessageCount();
-        //    var count = client.GetMessageCount();
-
-        //    var message = client.GetMessage(count);
-        //    treeView1.Nodes.Add(message.Headers.Subject);// заголовок
-        //    //listBox1.Items.Add(message.Headers.From);//от кого
-        //    //listBox1.Items.Add(message.Headers.DateSent);//Дата/Время
-        //                                                 // textBox1.Text = message.Headers.ContentType;
-        //}
-
 
         private void TextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -209,20 +289,7 @@ namespace PaperSleeve
             }
         }
 
-        // приём сообщений, реализовано через OpenPop
-        /* int pp = Convert.ToInt32(Con.Portpop);
-
-            var client = new OpenPop.Pop3.Pop3Client();
-            client.Connect(Con.Pop, pp, true);
-            client.Authenticate(Con.Mail, Con.password, OpenPop.Pop3.AuthenticationMethod.UsernameAndPassword);
-            int countMessage = client.GetMessageCount();
-            var count = client.GetMessageCount();
-
-            var  message = client.GetMessage(count);
-            listBox1.Items.Add(message.Headers.Subject);// заголовок
-            listBox1.Items.Add(message.Headers.From);//от кого
-            listBox1.Items.Add(message.Headers.DateSent);//Дата/Время
-           // textBox1.Text = message.Headers.ContentType;*/
+      
         private void button3_Click(object sender, EventArgs e)
         {
           
@@ -240,6 +307,7 @@ namespace PaperSleeve
             textBox1.Clear();
             textBox2.Clear();
             textBox3.Clear();
+            webBrowser1.DocumentText = "";
             textBox1.Focus();
             attData = null; label5.Text = "";
         }
@@ -260,40 +328,175 @@ namespace PaperSleeve
             About.ShowDialog();
         }
 
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ReceiveMails();
+        }
 
-        //public static List<Message> FetchAllMessages(string hostname, int port, bool useSsl, string username, string password)
+        private static int GetMessageNumberFromSelectedNode(TreeNode node)
+        {
+            if (node == null)
+                throw new ArgumentNullException("node");
+
+            // Check if we are at the root, by seeing if it has the Tag property set to an int
+            if (node.Tag is int)
+            {
+                return (int)node.Tag;
+            }
+
+            // Otherwise we are not at the root, move up the tree
+            return GetMessageNumberFromSelectedNode(node.Parent);
+        }
+
+        private void ListMessagesMessageSelected(object sender, TreeViewEventArgs e)
+        {
+            // Fetch out the selected message
+            Message message = messages[GetMessageNumberFromSelectedNode(treeView1.SelectedNode)];
+
+            // If the selected node contains a MessagePart and we can display the contents - display them
+            if (treeView1.SelectedNode.Tag is MessagePart)
+            {
+                
+                MessagePart selectedMessagePart = (MessagePart)treeView1.SelectedNode.Tag;
+                if (selectedMessagePart.IsText)
+                {
+                    
+                    
+                    
+                    // We can show text MessageParts
+                    webBrowser1.DocumentText = selectedMessagePart.GetBodyAsText();
+                   // webBrowser1.Navigating += WebBrowser1_Navigating;
+                    textBox1.Text = selectedMessagePart.GetBodyAsText();
+
+                }
+                else
+                {
+                    // We are not able to show non-text MessageParts (MultiPart messages, images, pdf's ...)
+                    textBox1.Text = "<<OpenPop>>Не удается отобразить эту часть сообщения электронной почты. Это не текст<<OpenPop>>";
+                }
+            }
+            else
+            {
+                
+                // If the selected node is not a subnode and therefore does not
+                // have a MessagePart in it's Tag property, we genericly find some content to show
+
+                // Find the first text/plain version
+                MessagePart plainTextPart = message.FindFirstPlainTextVersion();
+                if (plainTextPart != null)
+                {
+                    // The message had a text/plain version - show that one
+                    textBox1.Text = plainTextPart.GetBodyAsText();
+                }
+                else
+                {
+                    // Try to find a body to show in some of the other text versions
+                    List<MessagePart> textVersions = message.FindAllTextVersions();
+                    if (textVersions.Count >= 1)
+                        textBox1.Text = textVersions[0].GetBodyAsText();
+                    else
+                        textBox1.Text = "<<OpenPop>> не могу найти текстовую версию тела в это сообщение, чтобы показать <<OpenPop>>";
+                }
+            }
+
+            // Clear the attachment list from any previus shown attachments
+            treeView2.Nodes.Clear();
+
+            // Build up the attachment list
+            List<MessagePart> attachments = message.FindAllAttachments();
+            foreach (MessagePart attachment in attachments)
+            {
+                // Add the attachment to the list of attachments
+                TreeNode addedNode = treeView2.Nodes.Add((attachment.FileName));
+
+                // Keep a reference to the attachment in the Tag property
+                addedNode.Tag = attachment;
+            }
+
+            // Only show that attachmentPanel if there is attachments in the message
+            bool hadAttachments = attachments.Count > 0;
+            //attachmentPanel.Visible = hadAttachments;
+
+            
+        }
+
+        //private void WebBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         //{
-        //    // Используем using чтобы соединение автоматически закрывалось
-        //    using (Pop3Client client = new Pop3Client())
+        //    System.Windows.Forms.HtmlDocument document =
+        //    this.webBrowser1.Document;
+
+        //    if (document != null && document.All["userName"] != null &&
+        //    String.IsNullOrEmpty(
+        //    document.All["userName"].GetAttribute("value")))
         //    {
-
-        //        //110 or 995
-        //        //pop.mail.ru
-        //        //imap.mail.ru 993
-        //        // Подключение к серверу
-        //        client.Connect(hostname, port, useSsl);
-
-        //        // Аутентификация (проверка логина и пароля)
-        //        client.Authenticate(username, password);
-
-        //        // Получение количества сообщений в почтовом ящике
-        //        int messageCount = client.GetMessageCount();
-
-        //        // Выделяем память под список сообщений. Мы хотим получить все сообщения
-        //        List<Message> allMessages = new List<Message>(messageCount);
-
-        //        // Сообщения нумеруются от 1 до messageCount включительно
-        //        // Другим языком нумерация начинается с единицы
-        //        // Большинство серверов присваивают новым сообщениям наибольший номер (чем меньше номер тем старее сообщение)
-        //        // Т.к. цикл начинается с messageCount, то последние сообщения должны попасть в начало списка
-        //        for (int i = messageCount; i > 0; i--)
-        //        {
-        //            allMessages.Add(client.GetMessage(i));
-        //        }
-
-        //        // Возвращаем список сообщений
-        //        return allMessages;
+        //        e.Cancel = true;
+        //        System.Windows.Forms.MessageBox.Show(
+        //        "You must enter your name before you can navigate to " +
+        //        e.Url.ToString());
         //    }
+        //}
+
+        private void ListAttachmentsAttachmentSelected(object sender, TreeViewEventArgs e)
+        {
+            // Fetch the attachment part which is currently selected
+            MessagePart attachment = (MessagePart)treeView2.SelectedNode.Tag;
+
+            if (attachment != null)
+            {
+                SaveFileDialog sav = new SaveFileDialog();
+                sav.FileName = attachment.FileName;
+                DialogResult result = sav.ShowDialog();
+                if (result != DialogResult.OK)
+                    return;
+
+                // Now we want to save the attachment
+                FileInfo file = new FileInfo(sav.FileName);
+
+                // Check if the file already exists
+                if (file.Exists)
+                {
+                    // User was asked when he chose the file, if he wanted to overwrite it
+                    // Therefore, when we get to here, it is okay to delete the file
+                    file.Delete();
+                }
+
+                // Lets try to save to the file
+                try
+                {
+                    attachment.Save(file);
+
+                    MessageBox.Show(this, "Вложение успешно сохранено");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, "Ошибка сохранения вложения: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(this, "Вложения нет");
+            }
+        }
+
+        // удаление 
+        private void удалитьСообщениеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode != null)
+            {
+                DialogResult drRet = MessageBox.Show(this, "Are you sure to delete the email?", "Delete email", MessageBoxButtons.YesNo);
+                if (drRet == DialogResult.Yes)
+                {
+                    int messageNumber = GetMessageNumberFromSelectedNode(treeView1.SelectedNode);
+                    pop3Client.DeleteMessage(messageNumber);
+
+                    treeView1.Nodes[messageNumber].Remove();
+
+                    drRet = MessageBox.Show(this, "Do you want to receive email again (this will commit your changes)?", "Receive email", MessageBoxButtons.YesNo);
+                    if (drRet == DialogResult.Yes)
+                        ReceiveMails();
+                }
+            }
+        }
     }
     
 

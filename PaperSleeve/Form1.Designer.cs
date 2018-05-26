@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,22 +55,27 @@
             this.label5 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.label6 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.treeView2 = new System.Windows.Forms.TreeView();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.удалитьСообщениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(8, 117);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(717, 341);
-            this.textBox1.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -125,7 +130,7 @@
             // оПрограммеToolStripMenuItem
             // 
             this.оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
-            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.оПрограммеToolStripMenuItem.Text = "О программе";
             this.оПрограммеToolStripMenuItem.Click += new System.EventHandler(this.оПрограммеToolStripMenuItem_Click);
             // 
@@ -285,7 +290,7 @@
             // 
             // label6
             // 
-            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(201, 473);
             this.label6.Name = "label6";
@@ -293,21 +298,136 @@
             this.label6.TabIndex = 19;
             this.label6.Text = "Прикрепленный файл:";
             // 
-            // listBox1
+            // button5
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(731, 27);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(249, 472);
-            this.listBox1.TabIndex = 20;
+            this.button5.Location = new System.Drawing.Point(222, 27);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(189, 23);
+            this.button5.TabIndex = 21;
+            this.button5.Text = "Обновить все сообщения";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // treeView1
+            // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView1.Location = new System.Drawing.Point(731, 46);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(249, 394);
+            this.treeView1.TabIndex = 22;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ListMessagesMessageSelected);
+            // 
+            // treeView2
+            // 
+            this.treeView2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView2.Location = new System.Drawing.Point(731, 457);
+            this.treeView2.Name = "treeView2";
+            this.treeView2.Size = new System.Drawing.Size(249, 53);
+            this.treeView2.TabIndex = 23;
+            this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ListAttachmentsAttachmentSelected);
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(731, 27);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(65, 13);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Сообщения";
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(728, 441);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 13);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "Вложения";
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.удалитьСообщениеToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(186, 26);
+            this.contextMenuStrip1.Click += new System.EventHandler(this.удалитьСообщениеToolStripMenuItem_Click);
+            // 
+            // удалитьСообщениеToolStripMenuItem
+            // 
+            this.удалитьСообщениеToolStripMenuItem.Name = "удалитьСообщениеToolStripMenuItem";
+            this.удалитьСообщениеToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.удалитьСообщениеToolStripMenuItem.Text = "Удалить сообщение";
+            this.удалитьСообщениеToolStripMenuItem.Click += new System.EventHandler(this.удалитьСообщениеToolStripMenuItem_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(0, 117);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(725, 347);
+            this.tabControl1.TabIndex = 27;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(717, 321);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Текст сообщения";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.webBrowser1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(717, 321);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Картинка";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(3, 3);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(711, 315);
+            this.webBrowser1.TabIndex = 27;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(718, 325);
+            this.textBox1.TabIndex = 28;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 534);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.treeView2);
+            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.button4);
@@ -323,7 +443,6 @@
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -337,14 +456,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
@@ -370,7 +492,19 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView treeView2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem удалитьСообщениеToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 
